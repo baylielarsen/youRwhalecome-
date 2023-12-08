@@ -13,6 +13,73 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rgbif)
+library(tidyverse)
+library(MuMIn)
+library(rnoaa)
+library(data.table)
+library(ggmap)
+library(usmap)
+library(magick)
+library(cowplot)
+library(lme4)
+library(car)
+library(sf)
+library(knitr)
+library(kableExtra)
+```
+
+```{r, echo=FALSE, message=FALSE}
+whale.d <- weather.d%>%
+  mutate(year=as.integer(str_sub(date,1,4)), 
+         date=as.Date(date))%>%
+  group_by(year)%>% 
+ mutate(j.day=julian(date,origin=as.Date(paste0(unique(year),"-01-01"))), 
+  date2=date,
+  wdir.rad=(180-abs(wdf2-180))*pi/180, 
+  wvec=cos(wdir.rad)*-1*awnd 
+  )%>% 
+  dplyr::select(id,year,date2,j.day,tmin,tmax,wvec)%>% 
+  left_join(sta.d%>%select(id,name,migr.day))%>% 
+  mutate(j.day=j.day+migr.day)
+```
+```
+```{r, echo=FALSE, message=FALSE}
+#mean arrival time
+species_count.arr.weath <- species_count.arrive.date%>%
+  left_join(weather.d)%>%
+  left_join(species_count%>%dplyr::select(year,date,j.day))
+head(species_count.arr.weath)
+
+weather.wk <-weather.d %>% 
+  group_by(year,name) %>% 
+  mutate(wk.tmin = frollmean(tmin, n=14,align="right"),
+         wk.tmax = frollmean(tmax, n=14,align="right"),
+         wk.wvec = frollmean(wvec, n=14,align="right")
+         )%>%
+  dplyr::select(j.day,date2,name,wk.tmin,wk.tmax,wk.wvec)
+
+species_count.arr.weath2 <- species_count.arrive.date%>%
+  left_join(weather.wk)
+head(species_count.arr.weath2)
+```
+
+```{r}
+```{r, echo=FALSE, message=FALSE}
+#linear mixed effect
+species_count.lmer <- lmer(j.day~tmin*tmax*wvec+(1|name),species_count.arr.weath,na.action = "na.fail")
+Anova(species_count.lmer)
+
+species_count.lmer2 <- lmer(j.day~wk.tmin*wk.tmax*wk.wvec+(1|name),species_count.arr.weath2,na.action = "na.fail")
+Anova(species_count.lmer2)
+
+species_count.arr.aic <- dredge(species_count.lmer2,fixed = c("wk.tmin","wk.tmax","wk.wvec"),)
+species_count.kb <- kable(species_count.arr.aic[1:4,],caption = "Fit values for nested models of the most complicated lme model")
+kable_styling(species_count.kb)
+
+best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),species_count.arr.weath2,na.action = "na.fail")
+Anova(best.lmer)
+```
 ```
 
 ## Discussion
