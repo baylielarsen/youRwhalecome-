@@ -1,0 +1,20 @@
+---
+title: "Final project"
+author: "Hannah Sutoris, Baylie Larsen, Nicole Masuoka"
+date: "2023-12-08"
+output: html_document
+---
+
+## Introduction
+
+## Methods
+
+## Results
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Discussion
+
+## Author Contributions
