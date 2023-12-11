@@ -40,6 +40,9 @@ ggplot(whale_data, aes(x=Preg, y=Cortisol, fill=Preg))+
      geom_boxplot()+
      labs(title="data",x="pregnant", y="cortisol")
 
+ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortisol, fill=Preg))+
+     geom_boxplot()+
+     labs(title="data",x="pregnant", y="cortisol")
 
 #aic/dredge
 library(lme4)
@@ -49,11 +52,11 @@ whale_models <- dredge(lm(Cortisol ~ Preg + Voyages + Year, data = whale_data, n
 
 
 print(whale_models)
-
-
-averaged_model <- model.avg(whale_models)
-
-print(averaged_model)
+# 
+# 
+# averaged_model <- model.avg(whale_models)
+# 
+# print(averaged_model)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
