@@ -44,19 +44,31 @@ ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortiso
      geom_boxplot()+
      labs(title="data",x="pregnant", y="cortisol")
 
-#aic/dredge
+
+
+#aic/dredge of 3 variables
 library(lme4)
 library(MuMIn)
 whale_data <-read.csv("whale_data.csv")
 whale_models <- dredge(lm(Cortisol ~ Preg + Voyages + Year, data = whale_data, na.action = "na.fail"))
 
-
 print(whale_models)
-# 
-# 
-# averaged_model <- model.avg(whale_models)
-# 
-# print(averaged_model)
+
+#lmer?
+library(lme4)
+model <- lmer(Cortisol ~ Preg + Voyages + (1 | Sample_ID), data = whale_data)
+
+#Anova
+anova_whales <- aov(Cortisol ~ Preg, data=whale_data)
+
+print(anova_whales)
+
+#Tukey
+tukey_result <- TukeyHSD(anova_whales)
+
+# Print post-hoc test results
+print(tukey_result)
+
 ```
 
 ```{r, echo=FALSE, message=FALSE}
