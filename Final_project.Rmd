@@ -34,15 +34,26 @@ whale_data <-read.csv("whale_data.csv")
 meanC <- mean(whale_data$Cortisol)
 print(meanC)
 
+#boxplot
 library(ggplot2)
 ggplot(whale_data, aes(x=Preg, y=Cortisol, fill=Preg))+
      geom_boxplot()+
      labs(title="data",x="pregnant", y="cortisol")
 
-```
 
-```{r, echo=FALSE, message=FALSE}
+#aic/dredge
+library(lme4)
+library(MuMIn)
+whale_data <-read.csv("whale_data.csv")
+whale_models <- dredge(lm(Cortisol ~ Preg + Voyages + Year, data = whale_data, na.action = "na.fail"))
 
+
+print(whale_models)
+
+
+averaged_model <- model.avg(whale_models)
+
+print(averaged_model)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
