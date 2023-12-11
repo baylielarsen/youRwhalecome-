@@ -7,9 +7,12 @@ output: html_document
 
 ## Introduction
 
+
 ## Methods
 
+
 ## Results
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -31,20 +34,46 @@ library(kableExtra)
 
 ```{r, echo=FALSE, message=FALSE}
 whale_data <-read.csv("whale_data.csv")
+whale_data2 <- read.csv("Whale_data2.csv")
 meanC <- mean(whale_data$Cortisol)
 print(meanC)
 
-#boxplot
-library(ggplot2)
-ggplot(whale_data, aes(x=Preg, y=Cortisol, fill=Preg))+
-     geom_boxplot()+
-     labs(title="data",x="pregnant", y="cortisol")
 
 ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortisol, fill=Preg))+
      geom_boxplot()+
      labs(title="data",x="pregnant", y="cortisol")
 
+covid_whale_data <- subset(whale_data, Year == 2021)
+after_covid_plot <- ggplot(subset(covid_whale_data, Preg != "Male"), aes(x=Preg, y=Cortisol, fill=Preg))+
+  geom_boxplot()+
+  labs(title="data",x="pregnant", y="cortisol")
+after_covid_plot
 
+library(ggplot2)
+library(gridExtra)
+
+y_axis_breaks <- seq(0.1, 1, by = 0.2)
+y_axis_labels <- seq(0.1, 1, by = 0.2)
+
+# Create the first box plot
+before_covid_plot <- ggplot(subset(whale_data, Preg != "Male" & Year != 2021), aes(x = Preg, y = Cortisol, fill = Preg)) +
+  geom_boxplot() +
+  labs(title = "Before COVID Data", x = "Pregnant", y = "Cortisol") +
+  scale_y_continuous(breaks = y_axis_breaks, labels = y_axis_labels) +
+  theme_minimal()
+
+# Create the second box plot
+y_axis_breaks_after <- seq(0.1, 1, by = 0.2)
+y_axis_labels_after <- seq(0.1, 1, by = 0.2)
+covid_whale_data <- subset(whale_data, Year == 2021)
+after_covid_plot <- ggplot(subset(covid_whale_data, Preg != "Male"), aes(x = Preg, y = Cortisol, fill = Preg)) +
+  geom_boxplot() +
+  labs(title = "During COVID Data", x = "Pregnant", y = "Cortisol") +
+  scale_y_continuous(breaks = y_axis_breaks_after, labels = y_axis_labels_after) +
+  theme_minimal()
+
+# Combine the two plots
+grid.arrange(before_covid_plot, after_covid_plot, ncol = 2)
 
 #aic/dredge of 3 variables
 library(lme4)
@@ -54,9 +83,6 @@ whale_models <- dredge(lm(Cortisol ~ Preg + Voyages + Year, data = whale_data, n
 
 print(whale_models)
 
-#lmer?
-library(lme4)
-model <- lmer(Cortisol ~ Preg + Voyages + (1 | Sample_ID), data = whale_data)
 
 #Anova
 anova_whales <- aov(Cortisol ~ Preg, data=whale_data)
@@ -69,8 +95,14 @@ tukey_result <- TukeyHSD(anova_whales)
 # Print post-hoc test results
 print(tukey_result)
 
+
+#Part 2
+anova_whales2 <- aov(Cortisol ~ Voyage_Amount_Category, data=Whale_data2)
+print(anova_whales2)
 ```
 
 ## Discussion
+
+
 
 ## Author Contributions
