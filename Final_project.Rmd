@@ -30,6 +30,22 @@ library(kableExtra)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
+whale_data <-read.csv("whale_data.csv")
+meanC <- mean(whale_data$Cortisol)
+print(meanC)
+
+library(ggplot2)
+ggplot(whale_data, aes(x=Preg, y=Cortisol, fill=Preg))+
+     geom_boxplot()+
+     labs(title="data",x="pregnant", y="cortisol")
+
+```
+
+```{r, echo=FALSE, message=FALSE}
+
+```
+
+```{r, echo=FALSE, message=FALSE}
 whale.d <- weather.d%>%
   mutate(year=as.integer(str_sub(date,1,4)), 
          date=as.Date(date))%>%
