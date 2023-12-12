@@ -33,21 +33,21 @@ library(kableExtra)
 ```
 
 ```{r, echo=FALSE, message=FALSE}
-whale_data <-read.csv("whale_data.csv")
-whale_data2 <- read.csv("Whale_data2.csv")
+whale_data <-read.csv("Whale_data2.csv")
+
 meanC <- mean(whale_data$Cortisol)
 print(meanC)
 
-
-ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortisol, fill=Preg))+
-     geom_boxplot()+
-     labs(title="data",x="pregnant", y="cortisol")
-
-covid_whale_data <- subset(whale_data, Year == 2021)
-after_covid_plot <- ggplot(subset(covid_whale_data, Preg != "Male"), aes(x=Preg, y=Cortisol, fill=Preg))+
-  geom_boxplot()+
-  labs(title="data",x="pregnant", y="cortisol")
-after_covid_plot
+# 
+# # ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortisol, fill=Preg))+
+# #      geom_boxplot()+
+# #      labs(title="data",x="pregnant", y="cortisol")
+# 
+# covid_whale_data <- subset(whale_data, Year == 2021)
+# after_covid_plot <- ggplot(subset(covid_whale_data, Preg != "Male"), aes(x=Preg, y=Cortisol, fill=Preg))+
+#   geom_boxplot()+
+#   labs(title="data",x="pregnant", y="cortisol")
+# after_covid_plot
 
 library(ggplot2)
 library(gridExtra)
@@ -83,9 +83,24 @@ whale_models <- dredge(lm(Cortisol ~ Preg + Voyages + Year, data = whale_data, n
 
 print(whale_models)
 
+#New portion!!
+
+# adding covid years
+whale_data$covid <- character(nrow(whale_data)) 
+for (i in seq_along(whale_data$Voyages)) {
+  if (whale_data$Voyages[i] > 100) {
+    whale_data$covid[i] <- "Not Covid"
+  } else {
+    whale_data$covid[i] <- "Covid"
+  }
+}
+
 
 #Anova
-anova_whales <- aov(Cortisol ~ Preg, data=whale_data)
+library(dplyr)
+whale_data$logCort <- log(whale_data$Cortisol)
+
+anova_whales <- aov(lm(logCort~Preg*covid, data=whale_data))
 
 print(anova_whales)
 
@@ -96,9 +111,14 @@ tukey_result <- TukeyHSD(anova_whales)
 print(tukey_result)
 
 
-#Part 2
-anova_whales2 <- aov(Cortisol ~ Voyage_Amount_Category, data=Whale_data2)
-print(anova_whales2)
+
+library(ggplot2)
+ggplot(whale_data,aes(x=Preg,y=logCort,col=covid))+
+  geom_boxplot()+
+  xlab("Pregnant")+
+  ylab("Log Cortisol")+
+  guides(color=guide_legend(title="Covid"))+
+  theme_classic()
 ```
 
 ## Discussion
