@@ -40,8 +40,7 @@ library(kableExtra)
 ```{r, echo=FALSE, message=FALSE}
 whale_data <-read.csv("Whale_data2.csv")
 
-meanC <- mean(whale_data$Cortisol)
-print(meanC)
+
 
 # 
 # # ggplot(subset(whale_data, Preg != "Male", Year != "2021"), aes(x=Preg, y=Cortisol, fill=Preg))+
