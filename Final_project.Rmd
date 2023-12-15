@@ -3,12 +3,17 @@ title: "Final project"
 author: "Hannah Sutoris, Baylie Larsen, Nicole Masuoka"
 date: "2023-12-08"
 output: html_document
+Bibliography: BIOL2140.bib
 ---
 
 ## Introduction
+In the paper "Variation in blubber cortisol levels in a recovering humpback whale population inhabiting a rapidly changing environment," scientists set out to analyze monthly trends in blubber cortisol during different periods of the feeding season in the Western Antarctic Peninsula (WAP). They also studied if the reductions in vessels due to the COVID-19 pandemic resulted in lower blubber cortisol levels. In this experiment, the we focused on the cortisol levels of pregnant whales compared to non-pregnant whales before and after COVID-19 caused a reduction in vessels in WAP.Through using a two-factor anova we will analyze the statistical significance of how pregnant whales were effected by the pandemic. 
+The unique situation of being able to study whales before and after allows scientists further analyze the impact humans have on humpback whale health.As @pallin2022variation states, "Studies on marine mammals have documented associations between cortisol levels and human activity, such as vessel traffic and noise." Pregnant whales especially represent a crucial population due to the species endangerment.The paper, @sprogis2020vessel, confirms previous findings in vessel disruption in humpback whales, "Compared to control/low treatments, during high noise playbacks the mother’s proportion of time resting decreased by 30%, respiration rate doubled and swim speed increased by 37%." If vessel passages significantly heighten cortisol levels in pregnant whales, then it is known that the vessels directly cause this stress. 
 
 
 ## Methods
+The objective of this analysis was to demonstrate correlations between several different conditions (voyage amount, pregnancy status) on Cortisol levels in whales before and during the COVID-19 pandemic. The dataset from the CSV file provided in the paper “Variation in Blubber Cortisol Levels in a Recovering Humpback Whale Population Inhabiting a Rapidly Changing Environment”, was utilized for this analysis. An additional column was added to the CSV file, "Voyage_Amount_Category," which identifies the samples based on their amount of voyages being over 100 versus under 100, corresponding respectively to voyages pre-COVID pandemic versus during the pandemic. To start, mean Cortisol levels were computed. Then, boxplots were generated to illustrate the relationship between pregnancy status and Cortisol levels before and during the COVID-19 pandemic. After the boxplots, further investigation was conducted on the dataset to provide information on the correlations between Pregnancy ('Preg'), Voyage Amount ('Voyages'), and Year using the 'dredge' function from the 'MuMIn' package, which explores multiple models and their relationships with Cortisol levels. To continue to clarify connections, a linear model ('lm') is fitted to examine the relationship between Pregnancy and the interaction with COVID-19 status, and the log-transformed Cortisol levels. Followed by ANOVA, which is used to analyze the variance among groups, evaluating the significance of Pregnancy ('Preg') and COVID-19 status ('covid') on log-transformed Cortisol levels. A Tukey test is then performed to compare mean differences between groups and identify significant differences in log-transformed Cortisol levels among the various conditions. Finally, a plot is generated to portray the interaction effects between Pregnancy and COVID-19 status on log-transformed Cortisol levels.
+
 
 
 ## Results
@@ -126,3 +131,8 @@ ggplot(whale_data,aes(x=Preg,y=logCort,col=covid))+
 
 
 ## Author Contributions
+Baylie- Helped with research, developing coding and methods
+Nicole - Helped with research, developing coding and discussion
+Hannah- Helped with research, developing coding and introduction
+
+## References
